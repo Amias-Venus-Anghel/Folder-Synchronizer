@@ -93,6 +93,9 @@ class Monitor():
         dir_path = os.path.join(self.replica, directory)
 
         if not os.path.isdir(dir_path):
+            # if file exists with the same name because of different op order
+            if os.path.isfile(dir_path):
+                self.remove_file(dir_path)
             # If it doesn't exist, create it
             os.makedirs(dir_path)
             self.dirs.append(dir_path)
@@ -118,6 +121,8 @@ class Monitor():
             else:
                 operation = "Updated"
         else:
+            if os.path.isdir(file_path):
+                self.remove_dir(file_path)
             operation = "Copied"
 
         # else create and write file
